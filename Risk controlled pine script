@@ -1,0 +1,32 @@
+//@version=5
+strategy("Risk-Controlled Momentum Strategy", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=1)
+
+// Risk Management Settings
+risk_per_trade = 0.01  // 1% risk per trade
+atr_length = 14
+atr_mult = 1.5
+atr = ta.atr(atr_length)
+
+// Entry Logic: Momentum Breakout
+fast_ma = ta.ema(close, 9)
+slow_ma = ta.ema(close, 21)
+long_condition = ta.crossover(fast_ma, slow_ma)
+short_condition = ta.crossunder(fast_ma, slow_ma)
+
+// Stop-Loss and Take-Profit
+long_sl = close - atr * atr_mult
+long_tp = close + atr * atr_mult * 2
+short_sl = close + atr * atr_mult
+short_tp = close - atr * atr_mult * 2
+
+if (long_condition)
+    strategy.entry("Long", strategy.long)
+    strategy.exit("Long TP/SL", "Long", stop=long_sl, limit=long_tp)
+
+if (short_condition)
+    strategy.entry("Short", strategy.short)
+    strategy.exit("Short TP/SL", "Short", stop=short_sl, limit=short_tp)
+
+// Risk Control for Max Drawdown
+if (strategy.drawdown >= 0.03)
+    strategy.close_all()
