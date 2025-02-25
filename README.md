@@ -1,2 +1,0 @@
-# APXTRADINGalgo
-prop trading algorithms 

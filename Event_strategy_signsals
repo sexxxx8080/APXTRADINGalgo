@@ -1,0 +1,12 @@
+# APXTRADINGalgo
+prop trading algorithms 
+//@version=5
+indicator("Economic Events", overlay=true)
+
+// Define event dates and times (UTC) manually
+event_times = array.new_int(0)
+array.push(event_times, timestamp("2025-03-15 14:00"))  // Example event
+
+// Plot vertical lines on event dates
+for i = 0 to array.size(event_times) - 1
+    line.new(x1=array.get(event_times, i), y1=na, x2=array.get(event_times, i), y2=na, xloc=xloc.bar_time, extend=extend.both, color=color.red, style=line.style_dotted)
